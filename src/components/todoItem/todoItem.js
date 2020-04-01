@@ -21,16 +21,23 @@ export default class TodoItem extends Stepan.Component {
       //Get an iterator over all completed todos:
       let todos = this.parent.querySelectorAll("li.completed").values(); 
       for (let todo of todos) {
+        //Change to the "label" node. There is only one per li.
+        if (todo == null)
+          throw new Error("Todo is empty");
+        
         let label = todo.querySelector("div > label");
-        if (label.textContent == title)
-        {
+        if (label == null)
+          throw new Error("Label doesn't exist");
+
+        if (label.textContent == title) //If the titles are equal, so are the TODO items.
           throw new Error(`\"${title}\" TODO element has already been completed.`);
-        }
       }
       const rootElement = Stepan.createElement('li', this.parent, { class: isDone && 'completed' });
       const todoViewContainer = Stepan.createElement('div', rootElement, { class: 'view' });
-      Stepan.createElement('input', todoViewContainer, {class: "toggle", type: "checkbox"});
-  
+      const checkboxNode = Stepan.createElement('input', todoViewContainer, {class: "toggle", type: "checkbox"});
+      if (isDone)
+        checkboxNode.defaultChecked = true; 
+
       Stepan.createElement('label', todoViewContainer, {innerText: title});
       Stepan.createElement('button', todoViewContainer, {class: "destroy"});
       Stepan.createElement('input', todoViewContainer, { class: "edit", value: title });
@@ -38,7 +45,7 @@ export default class TodoItem extends Stepan.Component {
       return rootElement
 
     } catch (error) {
-      console.log(error);
+      console.log(error); //display the error on the console, for clarity and debugging purposes.
       return null;
     }
   }

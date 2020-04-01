@@ -1,11 +1,21 @@
 
 export default class Stepan {
+  
+  
+  static StepanError = class extends Error {
+    constructor(errorMessage) {
+      super(errorMessage); 
+      this.name = "StepanError";
+    }
+  }
+
   static createElement(element, parent, attributes = {}) {
     // TODO: check if this is a valid tag name
     const newElement = document.createElement(element);
-    if (!(newElement instanceof HTMLElement))
+    // console.log(`The new element is: ${JSON.stringify(newElement)} and it is not an instance of HTMLElement: ${!(newElement instanceof HTMLElement)}`);
+    if (newElement instanceof HTMLUnknownElement)
     {
-      throw new StepanError("Invalid newElement.");
+      throw new Stepan.StepanError("Invalid newElement.");
     }
     const { innerHTML, innerText } = attributes;
 
@@ -25,11 +35,13 @@ export default class Stepan {
     return newElement;
   }
 
+
+
   static Component = class {
     constructor(parent) {
-      if (!(parent instanceof HTMLElement) || parent == null)
+      if ((parent instanceof HTMLUnknownElement) || parent == null)
       {
-        throw new StepanError("No or invalid parent element."); //should remain unchecked
+        throw new Stepan.StepanError("No or invalid parent element."); //should remain unchecked
       }
       this.parent = parent;
 
@@ -38,12 +50,7 @@ export default class Stepan {
 
     }
   
-  static StepanError = class extends Error {
-    constructor(errorMessage) {
-      super(errorMessage); 
-      this.name = "StepanError";
-    }
-  }
+
 
     // TODO (Bonus): Ensure that every component returns a top-level root element
   }
